@@ -1,5 +1,7 @@
 # node-syslog
 
+[![Build Status](http://img.shields.io/travis/monai/node-syslog/develop.svg)](https://travis-ci.org/monai/node-syslog)
+
 Node.js bindings for syslog.
 
 ## API
