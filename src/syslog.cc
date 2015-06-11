@@ -5,8 +5,6 @@
 #define SYSLOG_NAMES
 #include <syslog.h>
 
-#include <iostream>
-
 using v8::FunctionTemplate;
 using v8::Handle;
 using v8::Local;
@@ -25,11 +23,13 @@ NAN_METHOD(Closelog) {
 NAN_METHOD(Openlog) {
     NanScope();
     
-    char ident[1024];
-    args[0]->ToString()->WriteUtf8((char *) &ident);
+    Local<String> Ident = args[0]->ToString();
+    
+    char ident[Ident->Utf8Length()];
+    Ident->WriteUtf8((char *) &ident);
     int logopt = args[1]->ToInteger()->Int32Value();
     int facility = args[2]->ToInteger()->Int32Value();
-
+    
     openlog(ident, logopt, facility);
     
     NanReturnUndefined();
