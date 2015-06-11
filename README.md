@@ -22,7 +22,7 @@ See manpage for details.
 
 ### syslog(priority, message)
 
-`printf` functionality is suppressed by always interpolating message as `%s`.
+`printf` functionality is suppressed by always interpolating `message` as `%s`.
 
 See manpage for details.
 
@@ -89,3 +89,7 @@ Internals:
 
 - INTERNAL_NOPRI
 - INTERNAL_MARK
+
+## License
+
+ISC
