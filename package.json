@@ -1,6 +1,6 @@
 {
   "name": "syslog-bindings",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Node.js bindings to syslog",
   "main": "index.js",
   "scripts": {
