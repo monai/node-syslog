@@ -1,13 +1,20 @@
 {
-  "name": "node-syslog",
+  "name": "syslog-bindings",
   "version": "0.0.0",
-  "description": "",
+  "description": "Node.js bindings to syslog",
   "main": "index.js",
   "scripts": {
     "test": "mocha -R spec --full-trace test/*"
   },
   "author": "monai",
   "license": "ISC",
+  "files": [
+    "src",
+    "binding.gyp",
+    "index.js",
+    "package.json",
+    "README.md"
+  ],
   "dependencies": {
     "bindings": "^1.2.1",
     "nan": "^1.8.4"
