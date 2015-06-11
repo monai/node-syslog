@@ -1,6 +1,7 @@
 # node-syslog
 
 [![Build Status](http://img.shields.io/travis/monai/node-syslog/develop.svg)](https://travis-ci.org/monai/node-syslog)
+[![NPM Version](http://img.shields.io/npm/v/syslog-bindings.svg)](https://www.npmjs.org/package/syslog-bindings)
 
 Node.js bindings to syslog.
 
