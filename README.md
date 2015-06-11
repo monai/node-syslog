@@ -15,7 +15,9 @@ See manpage for details.
 
 ### openlog(ident, logopt, facility)
 
-See manpage for details. `ident` length is limited to `1024`.
+`ident` length is limited to `char ident[1024]`.
+
+See manpage for details.
 
 ### setlogmask(maskpri)
 
