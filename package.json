@@ -1,18 +1,34 @@
 {
-  "name": "node-syslog",
-  "version": "0.0.0",
-  "description": "",
+  "name": "syslog-bindings",
+  "version": "0.0.1",
+  "description": "Node.js bindings to syslog",
   "main": "index.js",
   "scripts": {
     "test": "mocha -R spec --full-trace test/*"
   },
   "author": "monai",
   "license": "ISC",
+  "files": [
+    "src",
+    "binding.gyp",
+    "index.js"
+  ],
   "dependencies": {
     "bindings": "^1.2.1",
     "nan": "^1.8.4"
   },
   "devDependencies": {
     "mocha": "^2.2.5"
-  }
+  },
+  "homepage": "https://github.com/monai/node-syslog.git",
+  "bugs": {
+    "url": "https://github.com/monai/node-syslog/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monai/node-syslog.git"
+  },
+  "keywords": [
+    "syslog"
+  ]
 }

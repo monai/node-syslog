@@ -25,12 +25,12 @@ NAN_METHOD(Closelog) {
 NAN_METHOD(Openlog) {
     NanScope();
     
-    char title[1024];
-    args[0]->ToString()->WriteUtf8((char *) &title);
+    char ident[1024];
+    args[0]->ToString()->WriteUtf8((char *) &ident);
     int logopt = args[1]->ToInteger()->Int32Value();
     int facility = args[2]->ToInteger()->Int32Value();
 
-    openlog(title, logopt, facility);
+    openlog(ident, logopt, facility);
     
     NanReturnUndefined();
 }
