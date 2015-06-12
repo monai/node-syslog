@@ -5,6 +5,8 @@
 
 Node.js bindings to syslog.
 
+`npm install syslog-bindings`
+
 ## API
 
 API is as close as possible to `man 3 syslog`.
