@@ -40,7 +40,7 @@ NAN_METHOD(Setlogmask) {
     
     int out;
     int maskpri = args[0]->ToInteger()->Int32Value();
-    out = setlogmask(maskpri);
+    out = setlogmask(LOG_UPTO(maskpri));
     
     NanReturnValue(NanNew<Number>(out));
 }
@@ -56,8 +56,7 @@ NAN_METHOD(Syslog) {
 }
 
 void InitAll(Handle<Object> exports) {
-    #define EXPORTS(key_type, key, value_type, value) exports->Set(NanNew<key_type>(key), NanNew<value_type>(value));
-    #define EXPORTS_NUMBER(key, value) EXPORTS(String, key, Number, value)
+    #define EXPORTS_NUMBER(key, value) exports->Set(NanNew<String>(key), NanNew<Number>(value));
     #define EXPORTS_FUNCTION(key, value) exports->Set(NanNew<String>(key), NanNew<FunctionTemplate>(value)->GetFunction());
     
     // priorities
