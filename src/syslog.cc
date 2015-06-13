@@ -40,7 +40,7 @@ NAN_METHOD(Setlogmask) {
     
     int out;
     int maskpri = args[0]->ToInteger()->Int32Value();
-    out = setlogmask(maskpri);
+    out = setlogmask(LOG_UPTO(maskpri));
     
     NanReturnValue(NanNew<Number>(out));
 }
