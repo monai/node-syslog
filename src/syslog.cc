@@ -23,14 +23,12 @@ NAN_METHOD(Closelog) {
 NAN_METHOD(Openlog) {
     NanScope();
     
-    Local<String> Ident = args[0]->ToString();
+    openlog(**ident, logopt, facility);
     
-    char ident[Ident->Utf8Length()];
-    Ident->WriteUtf8((char *) &ident);
+    NanUtf8String *ident = new NanUtf8String(args[0]);
     int logopt = args[1]->ToInteger()->Int32Value();
     int facility = args[2]->ToInteger()->Int32Value();
     
-    openlog(ident, logopt, facility);
     
     NanReturnUndefined();
 }
