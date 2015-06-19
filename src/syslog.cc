@@ -17,33 +17,21 @@ using v8::String;
 NAN_METHOD(Closelog) {
     NanScope();
     
-    closelog();
-    
-    NanReturnUndefined();
-}
-
-NAN_METHOD(CloselogAsync) {
-    NanScope();
-    
     NanCallback *callback = new NanCallback(args[0].As<Function>());
     NanAsyncQueueWorker(new CloselogWorker(callback));
     
     NanReturnUndefined();
 }
 
-NAN_METHOD(Openlog) {
+NAN_METHOD(CloselogSync) {
     NanScope();
     
-    NanUtf8String *ident = new NanUtf8String(args[0]);
-    int logopt = args[1]->ToInteger()->Int32Value();
-    int facility = args[2]->ToInteger()->Int32Value();
-    
-    openlog(**ident, logopt, facility);
+    closelog();
     
     NanReturnUndefined();
 }
 
-NAN_METHOD(OpenlogAsync) {
+NAN_METHOD(Openlog) {
     NanScope();
     
     NanUtf8String *ident = new NanUtf8String(args[0]);
@@ -56,17 +44,19 @@ NAN_METHOD(OpenlogAsync) {
     NanReturnUndefined();
 }
 
-NAN_METHOD(Setlogmask) {
+NAN_METHOD(OpenlogSync) {
     NanScope();
     
-    int out;
-    int maskpri = args[0]->ToInteger()->Int32Value();
-    out = setlogmask(LOG_UPTO(maskpri));
+    NanUtf8String *ident = new NanUtf8String(args[0]);
+    int logopt = args[1]->ToInteger()->Int32Value();
+    int facility = args[2]->ToInteger()->Int32Value();
     
-    NanReturnValue(NanNew<Number>(out));
+    openlog(**ident, logopt, facility);
+    
+    NanReturnUndefined();
 }
 
-NAN_METHOD(SetlogmaskAsync) {
+NAN_METHOD(Setlogmask) {
     NanScope();
     
     int maskpri = args[0]->ToInteger()->Int32Value();
@@ -77,23 +67,33 @@ NAN_METHOD(SetlogmaskAsync) {
     NanReturnUndefined();
 }
 
-NAN_METHOD(Syslog) {
+NAN_METHOD(SetlogmaskSync) {
     NanScope();
     
-    int priority = args[0]->ToInteger()->Int32Value();
-    String::Utf8Value message(args[1]->ToString());
-    syslog(priority, "%s", *message);
+    int out;
+    int maskpri = args[0]->ToInteger()->Int32Value();
+    out = setlogmask(LOG_UPTO(maskpri));
     
-    NanReturnUndefined();
+    NanReturnValue(NanNew<Number>(out));
 }
 
-NAN_METHOD(SyslogAsync) {
+NAN_METHOD(Syslog) {
     NanScope();
     
     int priority = args[0]->ToInteger()->Int32Value();
     NanUtf8String *message = new NanUtf8String(args[1]);
     NanCallback *callback = new NanCallback(args[2].As<Function>());
     NanAsyncQueueWorker(new SyslogWorker(callback, priority, message));
+    
+    NanReturnUndefined();
+}
+
+NAN_METHOD(SyslogSync) {
+    NanScope();
+    
+    int priority = args[0]->ToInteger()->Int32Value();
+    String::Utf8Value message(args[1]->ToString());
+    syslog(priority, "%s", *message);
     
     NanReturnUndefined();
 }
@@ -144,13 +144,13 @@ void InitAll(Handle<Object> exports) {
     EXPORTS_NUMBER("LOG_PERROR", LOG_PERROR);
     
     EXPORTS_FUNCTION("closelog", Closelog);
-    EXPORTS_FUNCTION("closelogAsync", CloselogAsync);
+    EXPORTS_FUNCTION("closelogSync", CloselogSync);
     EXPORTS_FUNCTION("openlog", Openlog);
-    EXPORTS_FUNCTION("openlogAsync", OpenlogAsync);
+    EXPORTS_FUNCTION("openlogSync", OpenlogSync);
     EXPORTS_FUNCTION("setlogmask", Setlogmask);
-    EXPORTS_FUNCTION("setlogmaskAsync", SetlogmaskAsync);
+    EXPORTS_FUNCTION("setlogmaskSync", SetlogmaskSync);
     EXPORTS_FUNCTION("syslog", Syslog);
-    EXPORTS_FUNCTION("syslogAsync", SyslogAsync);
+    EXPORTS_FUNCTION("syslogSync", SyslogSync);
     
     #ifdef SYSLOG_NAMES
     EXPORTS_NUMBER("INTERNAL_NOPRI", INTERNAL_NOPRI);
