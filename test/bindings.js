@@ -67,8 +67,10 @@ describe('syslog bindings', function () {
     });
     
     describe('functions', function () {
-        [ 'closelog', 'openlog', 'setlogmask', 'syslog' ]
-        .forEach(function (func) {
+        [
+            'closelog', 'openlog', 'setlogmask', 'syslog',
+            'closelogSync', 'openlogSync', 'setlogmaskSync', 'syslogSync'
+        ].forEach(function (func) {
             it('should exist function "'+ func +'"', function () {
                 assert.strictEqual(typeof bindings[func], 'function');
             });

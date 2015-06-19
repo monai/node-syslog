@@ -11,25 +11,56 @@ Node.js bindings to syslog.
 
 API is as close as possible to `man 3 syslog`.
 
-### closelog()
+### closelog(callback)
 
 See manpage for details.
 
-### openlog(ident, logopt, facility)
+Callback arguments:
+
+- none
+
+### closelogSync()
+
+Synchronious closelog.
+
+### openlog(ident, logopt, facility, callback)
 
 See manpage for details.
 
-### setlogmask(maskpri)
+Callback arguments:
 
-Returns previous log mask level.
+- none
+
+### openlogSync(ident, logopt, facility)
+
+Synchronious openlog.
+
+### setlogmask(maskpri, callback)
 
 See manpage for details.
 
-### syslog(priority, message)
+Callback arguments:
+
+- null
+- previous log mask level
+
+### setlogmaskSync(maskpri)
+
+Synchronious setlogmask. Returns previous log mask level.
+
+### syslog(priority, message, callback)
 
 `printf` functionality is suppressed by always interpolating `message` as `%s`.
 
 See manpage for details.
+
+Callback arguments:
+
+- none
+
+### syslogSync(priority, message)
+
+Synchronious syslog.
 
 ### prioritynames
 
