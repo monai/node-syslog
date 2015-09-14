@@ -13,94 +13,71 @@ using v8::Local;
 using v8::Object;
 using v8::Number;
 using v8::String;
+using Nan::AsyncQueueWorker;
+using Nan::Callback;
+using Nan::GetFunction;
+using Nan::HandleScope;
+using Nan::New;
+using Nan::Set;
+using Nan::Utf8String;
 
 NAN_METHOD(Closelog) {
-    NanScope();
-    
-    NanCallback *callback = new NanCallback(args[0].As<Function>());
-    NanAsyncQueueWorker(new CloselogWorker(callback));
-    
-    NanReturnUndefined();
+    Callback *callback = new Callback(info[0].As<Function>());
+    AsyncQueueWorker(new CloselogWorker(callback));
 }
 
 NAN_METHOD(CloselogSync) {
-    NanScope();
-    
     closelog();
-    
-    NanReturnUndefined();
 }
 
 NAN_METHOD(Openlog) {
-    NanScope();
+    Utf8String *ident = new Utf8String(info[0]);
+    int logopt = info[1]->ToInteger()->Int32Value();
+    int facility = info[2]->ToInteger()->Int32Value();
     
-    NanUtf8String *ident = new NanUtf8String(args[0]);
-    int logopt = args[1]->ToInteger()->Int32Value();
-    int facility = args[2]->ToInteger()->Int32Value();
-    
-    NanCallback *callback = new NanCallback(args[3].As<Function>());
-    NanAsyncQueueWorker(new OpenlogWorker(callback, ident, logopt, facility));
-    
-    NanReturnUndefined();
+    Callback *callback = new Callback(info[3].As<Function>());
+    AsyncQueueWorker(new OpenlogWorker(callback, ident, logopt, facility));
 }
 
 NAN_METHOD(OpenlogSync) {
-    NanScope();
-    
-    NanUtf8String *ident = new NanUtf8String(args[0]);
-    int logopt = args[1]->ToInteger()->Int32Value();
-    int facility = args[2]->ToInteger()->Int32Value();
+    Utf8String *ident = new Utf8String(info[0]);
+    int logopt = info[1]->ToInteger()->Int32Value();
+    int facility = info[2]->ToInteger()->Int32Value();
     
     openlog(**ident, logopt, facility);
-    
-    NanReturnUndefined();
 }
 
 NAN_METHOD(Setlogmask) {
-    NanScope();
+    int maskpri = info[0]->ToInteger()->Int32Value();
     
-    int maskpri = args[0]->ToInteger()->Int32Value();
-    
-    NanCallback *callback = new NanCallback(args[1].As<Function>());
-    NanAsyncQueueWorker(new SetlogmaskWorker(callback, maskpri));
-    
-    NanReturnUndefined();
+    Callback *callback = new Callback(info[1].As<Function>());
+    AsyncQueueWorker(new SetlogmaskWorker(callback, maskpri));
 }
 
 NAN_METHOD(SetlogmaskSync) {
-    NanScope();
-    
     int out;
-    int maskpri = args[0]->ToInteger()->Int32Value();
+    int maskpri = info[0]->ToInteger()->Int32Value();
     out = setlogmask(LOG_UPTO(maskpri));
     
-    NanReturnValue(NanNew<Number>(out));
+    info.GetReturnValue().Set(New<Number>(out));
 }
 
 NAN_METHOD(Syslog) {
-    NanScope();
-    
-    int priority = args[0]->ToInteger()->Int32Value();
-    NanUtf8String *message = new NanUtf8String(args[1]);
-    NanCallback *callback = new NanCallback(args[2].As<Function>());
-    NanAsyncQueueWorker(new SyslogWorker(callback, priority, message));
-    
-    NanReturnUndefined();
+    int priority = info[0]->ToInteger()->Int32Value();
+    Utf8String *message = new Utf8String(info[1]);
+    Callback *callback = new Callback(info[2].As<Function>());
+    AsyncQueueWorker(new SyslogWorker(callback, priority, message));
 }
 
 NAN_METHOD(SyslogSync) {
-    NanScope();
-    
-    int priority = args[0]->ToInteger()->Int32Value();
-    String::Utf8Value message(args[1]->ToString());
+    int priority = info[0]->ToInteger()->Int32Value();
+    String::Utf8Value message(info[1]->ToString());
     syslog(priority, "%s", *message);
-    
-    NanReturnUndefined();
 }
 
-void InitAll(Handle<Object> exports) {
-    #define EXPORTS_NUMBER(key, value) exports->Set(NanNew<String>(key), NanNew<Number>(value));
-    #define EXPORTS_FUNCTION(key, value) exports->Set(NanNew<String>(key), NanNew<FunctionTemplate>(value)->GetFunction());
+NAN_MODULE_INIT(InitAll) {
+    #define EXPORTS_NUMBER(key, value) Set(target, New<String>(key).ToLocalChecked(), New<Number>(value));
+    #define EXPORTS_FUNCTION(key, value) Set(target, New<String>(key).ToLocalChecked(), GetFunction(New<FunctionTemplate>(value)).ToLocalChecked());
     
     // priorities
     EXPORTS_NUMBER("LOG_EMERG", LOG_EMERG);
@@ -125,7 +102,7 @@ void InitAll(Handle<Object> exports) {
     EXPORTS_NUMBER("LOG_CRON", LOG_CRON);
     EXPORTS_NUMBER("LOG_AUTHPRIV", LOG_AUTHPRIV);
     EXPORTS_NUMBER("LOG_FTP", LOG_FTP);
-
+    
     EXPORTS_NUMBER("LOG_LOCAL0", LOG_LOCAL0);
     EXPORTS_NUMBER("LOG_LOCAL1", LOG_LOCAL1);
     EXPORTS_NUMBER("LOG_LOCAL2", LOG_LOCAL2);
@@ -158,19 +135,19 @@ void InitAll(Handle<Object> exports) {
     
     int i;
     
-    Local<Object> priorityNames = NanNew<Object>();
+    Local<Object> priorityNames = New<Object>();
     i = -1;
     while (prioritynames[++i].c_val > -1) {
-        priorityNames->Set(NanNew<String>(prioritynames[i].c_name), NanNew<Number>(prioritynames[i].c_val));
+        Set(priorityNames, New<String>(prioritynames[i].c_name).ToLocalChecked(), New<Number>(prioritynames[i].c_val));
     }
-    exports->Set(NanNew<String>("prioritynames"), priorityNames);
+    Set(target, New<String>("prioritynames").ToLocalChecked(), priorityNames);
     
-    Local<Object> facilityNames = NanNew<Object>();
+    Local<Object> facilityNames = New<Object>();
     i = -1;
     while (facilitynames[++i].c_val > -1) {
-        facilityNames->Set(NanNew<String>(facilitynames[i].c_name), NanNew<Number>(facilitynames[i].c_val));
+        Set(facilityNames, New<String>(facilitynames[i].c_name).ToLocalChecked(), New<Number>(facilitynames[i].c_val));
     }
-    exports->Set(NanNew<String>("facilitynames"), facilityNames);
+    Set(target, New<String>("facilitynames").ToLocalChecked(), facilityNames);
     #endif
 }
 

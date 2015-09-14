@@ -7,6 +7,9 @@
 using v8::Local;
 using v8::Number;
 using v8::Value;
+using Nan::HandleScope;
+using Nan::New;
+using Nan::Null;
 
 void CloselogWorker::Execute () {
     closelog();
@@ -21,11 +24,9 @@ void SetlogmaskWorker::Execute () {
 }
 
 void SetlogmaskWorker::HandleOKCallback () {
-    NanScope();
-    
     Local<Value> argv[] = {
-        NanNull()
-      , NanNew<Number>(out)
+        Null()
+      , New<Number>(out)
     };
     
     callback->Call(2, argv);

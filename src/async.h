@@ -3,30 +3,34 @@
 
 #include <nan.h>
 
-class CloselogWorker : public NanAsyncWorker {
+using Nan::AsyncWorker;
+using Nan::Callback;
+using Nan::Utf8String;
+
+class CloselogWorker : public AsyncWorker {
     public:
-        CloselogWorker(NanCallback *callback)
-        : NanAsyncWorker(callback) {}
+        CloselogWorker(Callback *callback)
+        : AsyncWorker(callback) {}
         ~CloselogWorker() {}
         void Execute();
 };
 
-class OpenlogWorker : public NanAsyncWorker {
+class OpenlogWorker : public AsyncWorker {
     public:
-        OpenlogWorker(NanCallback *callback, NanUtf8String *ident, int logopt, int facility)
-        : NanAsyncWorker(callback), ident(ident), logopt(logopt), facility(facility) {}
+        OpenlogWorker(Callback *callback, Utf8String *ident, int logopt, int facility)
+        : AsyncWorker(callback), ident(ident), logopt(logopt), facility(facility) {}
         ~OpenlogWorker() {}
         void Execute();
     private:
-        NanUtf8String *ident;
+        Utf8String *ident;
         int logopt;
         int facility;
 };
 
-class SetlogmaskWorker : public NanAsyncWorker {
+class SetlogmaskWorker : public AsyncWorker {
     public:
-        SetlogmaskWorker(NanCallback *callback, int maskpri)
-        : NanAsyncWorker(callback), maskpri(maskpri) {}
+        SetlogmaskWorker(Callback *callback, int maskpri)
+        : AsyncWorker(callback), maskpri(maskpri) {}
         ~SetlogmaskWorker() {}
         void Execute();
         void HandleOKCallback();
@@ -35,15 +39,15 @@ class SetlogmaskWorker : public NanAsyncWorker {
         int out;
 };
 
-class SyslogWorker : public NanAsyncWorker {
+class SyslogWorker : public AsyncWorker {
     public:
-        SyslogWorker(NanCallback *callback, int priority, NanUtf8String *message)
-        : NanAsyncWorker(callback), priority(priority), message(message) {}
+        SyslogWorker(Callback *callback, int priority, Utf8String *message)
+        : AsyncWorker(callback), priority(priority), message(message) {}
         ~SyslogWorker() {}
         void Execute();
     private:
         int priority;
-        NanUtf8String *message;
+        Utf8String *message;
 };
 
 NAN_METHOD(CloselogAsync);
