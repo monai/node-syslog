@@ -1,7 +1,12 @@
 var assert = require('assert');
 var bindings = require('../');
 
-describe('syslog bindings', function () {
+if (bindings === null) {
+    console.log('Platform %s is not supported', process.platform);
+    process.exit(0);
+}
+
+describe('syslog bindings', function (done) {
     describe('constants', function () {
         function makeConstantTest(name, actual, expected) {
             it(name +' === '+ expected, function () {
