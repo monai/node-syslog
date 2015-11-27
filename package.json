@@ -1,6 +1,6 @@
 {
   "name": "syslog-bindings",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Node.js bindings to syslog",
   "main": "index.js",
   "scripts": {
@@ -15,10 +15,10 @@
   ],
   "dependencies": {
     "bindings": "^1.2.1",
-    "nan": "^2.0.9"
+    "nan": "^2.1.0"
   },
   "devDependencies": {
-    "mocha": "^2.3.2"
+    "mocha": "^2.3.4"
   },
   "homepage": "https://github.com/monai/node-syslog.git",
   "bugs": {
